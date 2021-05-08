@@ -1,25 +1,51 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import Posts from './components/posts';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+import { makeStyles } from '@material-ui/core/styles';
+
+const BASE_URL = 'https://dummyapi.io/data/api';
+const APP_ID = '6095ba695f614fd4495ef91b';
+
+
+
+
+const useStyles = makeStyles((theme) => ({
+  container:{
+    margin:"0 30%",
+  }
+}));
+
+
+
+
+
+
+const App = () => {
+    const [loading, setLoading] = useState(false);
+    const [posts, setPosts] = useState(null);
+    const classes = useStyles();
+ 
+
+
+    useEffect(() => {
+        setLoading(true);
+        axios.get(`${BASE_URL}/post`, { headers: { 'app-id': APP_ID } })
+            .then(({ data }) => setPosts(data))
+            .catch(console.error)
+            .finally(() => setLoading(false));
+    }, []);
+    
+ 
+    return (
+        <div className={classes.container}>
+          {loading && "Loading..."}
+          <Posts data={posts}></Posts>
+          {
+          //JSON.stringify(posts)
+          }
+        </div>
+    );
+};
 
 export default App;
